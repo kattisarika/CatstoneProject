@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script>
+        // The .bind method from Prototype.js
+        Function.prototype.bind = function () {
+            alert("I am here");
+            var fn = this,
+                args = Array.prototype.slice.call(arguments),
+                object = args.shift();
+            return function () {
+                alert(fn);
+                return fn.apply(object,
+                    args.concat(Array.prototype.slice.call(arguments)));
+            };
+        };
+    </script>
+
+</head>
+
+<body>
+    <p>Hello World!</p>
+</body>
+
+</html>
