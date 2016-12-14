@@ -16,12 +16,46 @@ $(document).ready(function () {
         $('#catchUpSection').show();
 
         var $coffeeorders = $('#coffeeorders');
-        var $name = $('#name');
-        var $drink = $('#drink');
+        var $name = '';
+        var $drink = '';
+        var $errorDisplay = $('#errorDisplay');
+
+        //  $('#name').on('input', function () {
+
+        function validateEmail(input) {
+            // var input = $(this);
+            var re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            var is_email = re.test(input);
+            console.log(is_email);
+            if (is_email) {
+                $name = $('#name');
+                return true;
+            } else {
+                //$errorDisplay.append('<p >' + " Please enter a valid Email id " + '</p>');
+                return false;
+            }
+        }
+        //   });
+
+
+
+
+        $('#drink').keypress(function (key) {
+            if ((key.charCode < 97 || key.charCode > 122) && (key.charCode < 65 || key.charCode > 90) && (key.charCode != 45))
+                return false;
+            else
+                $drink = $('#drink');
+        });
 
         $coffeeorders.empty();
 
+        function clearFields() {
+            $('#name').val('');
+            $('#drink').val('');
+        }
+
         function addOrder(dataArrayValue) {
+            clearFields();
             $coffeeorders.append('<li>name: ' + dataArrayValue.name + ',drink:' + dataArrayValue.drink + '</li>');
 
         }
@@ -45,22 +79,31 @@ $(document).ready(function () {
         });
         $('#add-order').on('click', function () {
             console.log("Am i in POST");
-            var order = {
-                name: $name.val(),
-                drink: $drink.val(),
-            };
-            $.ajax({
-                type: 'POST',
-                url: 'http://rest.learncode.academy/api/learncode/friends',
-                data: order,
-                success: function (newOrder) {
-                    addOrder(newOrder);
-                },
-                error: function () {
-                    alert("error loading orders");
-                }
-            });
+
+            if (validateEmail($('#name').val())) {
+
+
+
+                var order = {
+                    name: $name.val(),
+                    drink: $drink.val(),
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://rest.learncode.academy/api/learncode/friends',
+                    data: order,
+                    success: function (newOrder) {
+                        addOrder(newOrder);
+                    },
+                    error: function () {
+                        alert("error loading orders");
+                    }
+                });
+            } else {
+                $errorDisplay.append('<p >' + " Please enter a valid Email id " + '</p>');
+            }
         });
+
     }); // end of LetsCatchUp
 
     $('#YouthLeaderShipVideos').click(function (e) {
